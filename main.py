@@ -78,6 +78,11 @@ def map_problem():
     print(res)
 
     # Ex.10
+    map_prob = MapProblem(roads, 54, 549)
+    astar = AStar(NullHeuristic)
+    res = astar.solve_problem(map_prob)
+    print(res)
+
     # TODO: create an instance of `AStar` with the `NullHeuristic`,
     #       solve the same `map_prob` with it and print the results (as before).
     # Notice: AStar constructor receives the heuristic *type* (ex: `MyHeuristicClass`),

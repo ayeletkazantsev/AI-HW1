@@ -49,7 +49,8 @@ class AStar(BestFirstSearch):
         assert (search_node.cost is not None)
         assert (search_node.state is not None)
         w = self.heuristic_weight
-        return ((1-w) * search_node.cost) + (w * self.heuristic_function(search_node.state))
+        h = self.heuristic_function.estimate
+        return ((1-w) * search_node.cost) + (w * h(search_node.state))
 
 
     def _open_successor_node(self, problem: GraphProblem, successor_node: SearchNode):

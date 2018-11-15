@@ -39,7 +39,9 @@ class RelaxedDeliveriesState(GraphProblemState):
         TODO: implement this method!
         Notice: Never compare floats using `==` operator! Use `fuel_as_int` instead of `fuel`.
         """
-        raise NotImplemented()  # TODO: remove!
+        return self.current_location == other.current_location \
+               and self.dropped_so_far == other.dropped_so_far \
+               and self.fuel_as_int == other.fuel_as_int
 
     def __hash__(self):
         """
@@ -53,7 +55,7 @@ class RelaxedDeliveriesState(GraphProblemState):
                 Otherwise the upper requirement would not met.
                 In our case, use `fuel_as_int`.
         """
-        raise NotImplemented()  # TODO: remove!
+        return hash((self.current_location, self.dropped_so_far, self.fuel_as_int))
 
     def __str__(self):
         """
@@ -91,9 +93,31 @@ class RelaxedDeliveriesProblem(GraphProblem):
         Notice that this is an *Iterator*. Hence it should be implemented using the `yield` keyword.
         For each successor, a pair of the successor state and the operator cost is yielded.
         """
-        assert isinstance(state_to_expand, RelaxedDeliveriesState)
+        old_state = state_to_expand
+        assert isinstance(old_state, RelaxedDeliveriesState)
 
-        raise NotImplemented()  # TODO: remove!
+        left_to_drop = self.drop_points.difference(old_state.dropped_so_far)
+        possible_stop_points = left_to_drop | self.gas_stations
+
+        for link in old_state.current_location.links:
+            if old_state.fuel >= cost:
+                if junction in left_to_drop:
+                    singleton_fs = frozenset(junction)
+                    new_fuel = old_state.fuel - cost
+                    new_dropped = old_state.dropped_so_far | singleton_fs
+                else:
+                    new_fuel = self.gas_tank_capacity
+                    new_dropped = old_state.dropped_so_far
+                new_state = RelaxedDeliveriesState(junction, new_dropped, new_fuel)
+                yield (new_state, cost)
+
+
+
+
+
+
+
+
 
     def is_goal(self, state: GraphProblemState) -> bool:
         """
@@ -102,7 +126,8 @@ class RelaxedDeliveriesProblem(GraphProblem):
         """
         assert isinstance(state, RelaxedDeliveriesState)
 
-        raise NotImplemented()  # TODO: remove!
+        return state.current_location in self.possible_stop_points
+
 
     def solution_additional_str(self, result: 'SearchResult') -> str:
         """This method is used to enhance the printing method of a found solution."""

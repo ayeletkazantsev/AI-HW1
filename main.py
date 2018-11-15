@@ -81,26 +81,26 @@ def map_problem():
     print('Solve the map problem.')
 
     # Ex.8
-    map_prob = MapProblem(roads, 54, 549)
-    uc = UniformCost()
-    res = uc.solve_problem(map_prob)
-    print(res)
-
-    #       solve the same `map_prob` with it and print the results (as before).
-    # Notice: AStar constructor receives the heuristic *type* (ex: `MyHeuristicClass`),
-    #         and not an instance of the heuristic (eg: not `MyHeuristicClass()`).
-    #exit()
-    # Ex.10
-    map_prob = MapProblem(roads, 54, 549)
-    astar = AStar(NullHeuristic)
-    res = astar.solve_problem(map_prob)
-    print(res)
-
-    # Ex.11
-    map_prob = MapProblem(roads, 54, 549)
-    astar = AStar(AirDistHeuristic)
-    res = astar.solve_problem(map_prob)
-    print(res)
+    # map_prob = MapProblem(roads, 54, 549)
+    # uc = UniformCost()
+    # res = uc.solve_problem(map_prob)
+    # print(res)
+    #
+    # #       solve the same `map_prob` with it and print the results (as before).
+    # # Notice: AStar constructor receives the heuristic *type* (ex: `MyHeuristicClass`),
+    # #         and not an instance of the heuristic (eg: not `MyHeuristicClass()`).
+    # #exit()
+    # # Ex.10
+    # map_prob = MapProblem(roads, 54, 549)
+    # astar = AStar(NullHeuristic)
+    # res = astar.solve_problem(map_prob)
+    # print(res)
+    #
+    # # Ex.11
+    # map_prob = MapProblem(roads, 54, 549)
+    # astar = AStar(AirDistHeuristic)
+    # res = astar.solve_problem(map_prob)
+    # print(res)
 
     # Ex.12
     # TODO:
@@ -111,7 +111,7 @@ def map_problem():
     #    (upper in this file).
     # 3. Call here the function `run_astar_for_weights_in_range()`
     #    with `AirDistHeuristic` and `map_prob`.
-    run_astar_for_weights_in_range(AirDistHeuristic,map_prob)
+    #run_astar_for_weights_in_range(AirDistHeuristic,map_prob)
 
 
 # --------------------------------------------------------------------
@@ -129,7 +129,10 @@ def relaxed_deliveries_problem():
     # Ex.16
     # TODO: create an instance of `AStar` with the `MaxAirDistHeuristic`,
     #       solve the `big_deliveries_prob` with it and print the results (as before).
-    exit()  # TODO: remove!
+
+    astar = AStar(MaxAirDistHeuristic)
+    res = astar.solve_problem(big_deliveries_prob)
+    print(res)
 
     # Ex.17
     # TODO: create an instance of `AStar` with the `MSTAirDistHeuristic`,

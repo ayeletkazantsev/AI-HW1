@@ -99,10 +99,11 @@ class RelaxedDeliveriesProblem(GraphProblem):
         left_to_drop = self.drop_points.difference(old_state.dropped_so_far)
         possible_stop_points = left_to_drop | self.gas_stations
 
-        for link in old_state.current_location.links:
+        for junction in possible_stop_points:
+            cost = junction.calc_air_distance_from(old_state.current_location)
             if old_state.fuel >= cost:
                 if junction in left_to_drop:
-                    singleton_fs = frozenset(junction)
+                    singleton_fs = {junction}
                     new_fuel = old_state.fuel - cost
                     new_dropped = old_state.dropped_so_far | singleton_fs
                 else:
@@ -110,13 +111,6 @@ class RelaxedDeliveriesProblem(GraphProblem):
                     new_dropped = old_state.dropped_so_far
                 new_state = RelaxedDeliveriesState(junction, new_dropped, new_fuel)
                 yield (new_state, cost)
-
-
-
-
-
-
-
 
 
     def is_goal(self, state: GraphProblemState) -> bool:

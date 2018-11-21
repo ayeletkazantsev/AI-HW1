@@ -127,24 +127,22 @@ def relaxed_deliveries_problem():
     big_deliveries_prob = RelaxedDeliveriesProblem(big_delivery)
 
     # Ex.16
-    # TODO: create an instance of `AStar` with the `MaxAirDistHeuristic`,
     #       solve the `big_deliveries_prob` with it and print the results (as before).
 
-    astar = AStar(MaxAirDistHeuristic)
-    res = astar.solve_problem(big_deliveries_prob)
-    print(res)
+    # astar = AStar(MaxAirDistHeuristic)
+    # res = astar.solve_problem(big_deliveries_prob)
+    # print(res)
 
     # Ex.17
-    # TODO: create an instance of `AStar` with the `MSTAirDistHeuristic`,
     #       solve the `big_deliveries_prob` with it and print the results (as before).
-    astar = AStar(MSTAirDistHeuristic)
-    res = astar.solve_problem(big_deliveries_prob)
-    print(res)
-
-    # Ex.18
-    # TODO: Call here the function `run_astar_for_weights_in_range()`
-    #       with `MSTAirDistHeuristic` and `big_deliveries_prob`.
-    run_astar_for_weights_in_range(MSTAirDistHeuristic, big_deliveries_prob)
+    # astar = AStar(MSTAirDistHeuristic)
+    # res = astar.solve_problem(big_deliveries_prob)
+    # print(res)
+    #
+    #
+    # # Ex.18
+    # #       with `MSTAirDistHeuristic` and `big_deliveries_prob`.
+    # run_astar_for_weights_in_range(MSTAirDistHeuristic, big_deliveries_prob)
 
     # Ex.24
     # TODO:
@@ -166,7 +164,12 @@ def relaxed_deliveries_problem():
     #    (x-axis). Of course that the costs of A*, and deterministic
     #    greedy are not dependent with the iteration number, so
     #    these two should be represented by horizontal lines.
-    exit()  # TODO: remove!
+    #for i in range(0,100):
+
+    greedy = GreedyStochastic(MSTAirDistHeuristic)
+    res = greedy.solve_problem(big_deliveries_prob)
+    print (res)
+
 
 
 def strict_deliveries_problem():

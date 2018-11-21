@@ -18,7 +18,7 @@ for i in range(len(T)):
     for j in range(len(X)):
         P[i][j] = calculate_prob(i, j)
 
-print(P)
+#print(P)
 
 for i in range(len(X)):
     plt.plot(T, P[:, i], label=str(X[i]))

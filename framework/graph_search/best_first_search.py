@@ -128,6 +128,7 @@ class BestFirstSearch(GraphProblemSolver):
                     final_search_node = next_node_to_expand
                     break
 
+
                 nr_expanded_states += 1
 
                 # Iterate over next states and perform the update step for each.

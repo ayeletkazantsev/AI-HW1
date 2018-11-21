@@ -22,10 +22,12 @@ class MaxAirDistHeuristic(HeuristicFunction):
         assert isinstance(state, RelaxedDeliveriesState)
 
         air_dists = []
-        for junction in self.problem.possible_stop_points:
-            air_dists.append(junction.calc_air_distance_from(state.current_location))
-        return max(air_dists)
-
+        for junction in self.problem.drop_points - state.dropped_so_far:
+            air_dists.append(state.current_location.calc_air_distance_from(junction))
+        if len(air_dists) == 0:
+            return 0
+        else:
+            return max(air_dists)
 
 class MSTAirDistHeuristic(HeuristicFunction):
     heuristic_name = 'MSTAirDist'

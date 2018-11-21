@@ -54,27 +54,31 @@ class GreedyStochastic(BestFirstSearch):
                 pushed again into that queue.
         """
 
-        min_size = min(self.N,len(self.open))
-        h = self.heuristic_function.estimate
+        min_size = min(self.N, len(self.open))
         best_heuristics = []
         nodes = []
-        for i in range (0,min_size):
+        for i in range(0,len(self.open)):
             node = self.open.pop_next_node()
             nodes.append(node)
-            best_heuristics.append((h(node.state),node))
+            best_heuristics.append((node.expanding_priority,node))
 
-        for i in range (0,min_size):
+        for i in range(0,len(nodes)):
             self.open.push_node(nodes[i])
 
-        min_X = min(best_heuristics, key=lambda t:t[0])[0]
-        sum1 = sum(map(lambda tuple: ((tuple[0]/min_X)**(-1/self.T)),best_heuristics))
+        best_heuristics.sort(key=lambda x:x[0])
+        best_heuristics = best_heuristics[:min_size]
 
-        #TODO: get rid of the round
-        probabilities = list(map(lambda tuple: ((tuple[0]/min_X)**(-1/self.T)/sum1),best_heuristics))
-       # probabilities /= probabilities.sum()
-        if (sum(probabilities)<1):
-            print ("hello")
+        min_tuple = best_heuristics[0] #get tuple with minimal heuristic
+        min_h = min_tuple[0] #minimal heuristic value
 
-        random_tuple_idx = np.random.choice(min_size,None,False,probabilities)
-        return best_heuristics[random_tuple_idx][1]
+        if (min_h == 0): #traget node, therefore extract it
+            self.open.extract_node(min_tuple[1])
+            return min_tuple[1]
+
+        sum1 = sum(map(lambda tuple: ((tuple[0] / min_h) ** (-1 / self.T)), best_heuristics))
+        probabilities = list(map(lambda tuple: ((tuple[0] / min_h) ** (-1 / self.T) / sum1), best_heuristics))
+        chosen_tuple_idx = np.random.choice(min_size, p=probabilities)
+        self.open.extract_node(best_heuristics[chosen_tuple_idx][1])
+        return best_heuristics[chosen_tuple_idx][1] #return randomly chosen node
+
 

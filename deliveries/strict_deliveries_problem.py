@@ -79,15 +79,23 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
             target_junction = self.roads[target_id]
 
             # if old_state.fuel < fuel_cost or target_junction not in possible_stop_points:
-            if old_state.fuel < fuel_cost:
+            if old_state.fuel < fuel_cost or target_junction in old_state.dropped_so_far:
                 continue
 
             if target_junction in self.gas_stations:
                 new_dropped_so_far = old_state.dropped_so_far
                 new_fuel = self.gas_tank_capacity
-            else:
+            elif target_junction in self.drop_points:
                 new_dropped_so_far = old_state.dropped_so_far | {target_junction}
                 new_fuel = old_state.fuel - fuel_cost
+                if new_fuel == 0:
+                    continue
+            else:
+                new_dropped_so_far = old_state.dropped_so_far
+                new_fuel = old_state.fuel - fuel_cost
+                if new_fuel == 0:
+                    continue
+
 
             astar_cost = self._get_from_cache(link)
             if astar_cost == None: #didn't found link in cache
@@ -105,6 +113,9 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
         TODO: implement this method!
         """
         assert isinstance(state, StrictDeliveriesState)
+
+        # if (len(state.dropped_so_far)>=2):
+        #     print ("hello")
 
         left_to_drop = self.drop_points.difference(state.dropped_so_far)
         return len(left_to_drop) == 0 and state.current_location in self.drop_points

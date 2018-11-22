@@ -214,7 +214,10 @@ def strict_deliveries_problem():
     # run_astar_for_weights_in_range(MSTAirDistHeuristic, small_deliveries_strict_problem)
 
     astar = AStar(MSTAirDistHeuristic,0.5)
+    uc = UniformCost()
+    # print (uc.solve_problem(small_deliveries_strict_problem))
     res = astar.solve_problem(small_deliveries_strict_problem)
+
     print (res)
     exit()
 

@@ -66,7 +66,7 @@ class MapProblem(GraphProblem):
             operator_cost = junction.calc_air_distance_from(target)
 
             # Yield the successor state and the cost of the operator we used to get this successor.
-            yield successor_state, operator_cost
+            yield (successor_state, operator_cost)
 
     def is_goal(self, state: GraphProblemState) -> bool:
         """

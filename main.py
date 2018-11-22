@@ -164,11 +164,39 @@ def relaxed_deliveries_problem():
     #    (x-axis). Of course that the costs of A*, and deterministic
     #    greedy are not dependent with the iteration number, so
     #    these two should be represented by horizontal lines.
-    #for i in range(0,100):
 
-    greedy = GreedyStochastic(MSTAirDistHeuristic)
-    res = greedy.solve_problem(big_deliveries_prob)
-    print (res)
+    res_costs_anytime_algorithm = []
+    K = 100
+
+    #1+2: Calculate the costs of the anytime algorithm
+    greedy_results = []
+    res_costs_anytime_algorithm = []
+    for i in range(K):
+        greedy = GreedyStochastic(MSTAirDistHeuristic)
+        res = greedy.solve_problem(big_deliveries_prob)
+        greedy_results.append(res.final_search_node.cost)
+        res_costs_anytime_algorithm.append(min(greedy_results))
+
+    #3+4:
+    astar = AStar(MSTAirDistHeuristic,0.5)
+    res_astar_05 = astar.solve_problem(big_deliveries_prob)
+    astar = AStar(MSTAirDistHeuristic,1)
+    res_astar_1 = astar.solve_problem(big_deliveries_prob)
+
+    #5: plotting 4 graphs
+    x = [x for x in range(1,K+1)]
+    y1 = [y for y in res_costs_anytime_algorithm]
+    y2 = greedy_results
+    plt.plot(x,y1,color='blue',label="Anytime Greedy Stochastic")
+    plt.plot(x,y2,color='silver',label="Greedy Stochastic")
+    plt.axhline(y=res_astar_1.final_search_node.cost, color='r',label = "Greedy Deterministic")
+    plt.axhline(y=res_astar_05.final_search_node.cost, color='green',label = "A*")
+    plt.xlabel("Iteration")
+    plt.ylabel("Total cost")
+    plt.title("Total cost vs. Iteration")
+    plt.grid()
+    plt.legend()
+    plt.show()
 
 
 

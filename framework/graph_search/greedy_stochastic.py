@@ -53,10 +53,15 @@ class GreedyStochastic(BestFirstSearch):
                 of these popped items. The other items have to be
                 pushed again into that queue.
         """
+        if self.open.is_empty():
+            return None
 
         min_size = min(self.N, len(self.open))
         best_heuristics = []
         nodes = []
+
+        #iterating over the min_size minimal values of heuristics,
+        # and creating an array of tuples (h(state),node)
         for i in range(0,min_size):
             node = self.open.pop_next_node()
             nodes.append(node)
@@ -67,15 +72,19 @@ class GreedyStochastic(BestFirstSearch):
 
         min_tuple = min(best_heuristics,key=lambda x:x[0]) #get tuple with minimal heuristic
         min_h = min_tuple[0] #minimal heuristic value
+        node_to_expand = min_tuple[1]
 
-        if (min_h == 0): #traget node, therefore extract it
-            self.open.extract_node(min_tuple[1])
-            return min_tuple[1]
+        if (min_h != 0): #if not target node, calculate probabilities
+            sum1 = sum(map(lambda tuple: ((tuple[0] / min_h) ** (-1 / self.T)), best_heuristics))
+            probabilities = list(map(lambda tuple: ((tuple[0] / min_h) ** (-1 / self.T) / sum1), best_heuristics))
+            chosen_tuple_idx = np.random.choice(min_size, p=probabilities)
+            node_to_expand = best_heuristics[chosen_tuple_idx][1]
 
-        sum1 = sum(map(lambda tuple: ((tuple[0] / min_h) ** (-1 / self.T)), best_heuristics))
-        probabilities = list(map(lambda tuple: ((tuple[0] / min_h) ** (-1 / self.T) / sum1), best_heuristics))
-        chosen_tuple_idx = np.random.choice(min_size, p=probabilities)
-        self.open.extract_node(best_heuristics[chosen_tuple_idx][1])
-        return best_heuristics[chosen_tuple_idx][1] #return randomly chosen node
+        self.open.extract_node(node_to_expand)
+        if self.use_close:
+            self.close.add_node(node_to_expand)
+
+        self.T *=self.T_scale_factor
+        return node_to_expand
 
 

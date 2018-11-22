@@ -57,7 +57,7 @@ class GreedyStochastic(BestFirstSearch):
         min_size = min(self.N, len(self.open))
         best_heuristics = []
         nodes = []
-        for i in range(0,len(self.open)):
+        for i in range(0,min_size):
             node = self.open.pop_next_node()
             nodes.append(node)
             best_heuristics.append((node.expanding_priority,node))
@@ -65,10 +65,7 @@ class GreedyStochastic(BestFirstSearch):
         for i in range(0,len(nodes)):
             self.open.push_node(nodes[i])
 
-        best_heuristics.sort(key=lambda x:x[0])
-        best_heuristics = best_heuristics[:min_size]
-
-        min_tuple = best_heuristics[0] #get tuple with minimal heuristic
+        min_tuple = min(best_heuristics,key=lambda x:x[0]) #get tuple with minimal heuristic
         min_h = min_tuple[0] #minimal heuristic value
 
         if (min_h == 0): #traget node, therefore extract it

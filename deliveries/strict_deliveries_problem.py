@@ -3,6 +3,7 @@ from framework.ways import *
 from .map_problem import MapProblem
 from .deliveries_problem_input import DeliveriesProblemInput
 from .relaxed_deliveries_problem import RelaxedDeliveriesState, RelaxedDeliveriesProblem
+from .map_heuristics import AirDistHeuristic
 
 from typing import Set, FrozenSet, Optional, Iterator, Tuple, Union
 
@@ -67,8 +68,36 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
         For each successor, a pair of the successor state and the operator cost is yielded.
         """
         assert isinstance(state_to_expand, StrictDeliveriesState)
+        old_state = state_to_expand
 
-        raise NotImplemented()  # TODO: remove!
+        possible_stop_points = (self.drop_points - old_state.dropped_so_far) | self.gas_stations
+
+        for link in old_state.current_location.links:
+            fuel_cost = link.distance
+            target_id = link.target
+            source_id = old_state.current_location.index
+            target_junction = self.roads[target_id]
+
+            # if old_state.fuel < fuel_cost or target_junction not in possible_stop_points:
+            if old_state.fuel < fuel_cost:
+                continue
+
+            if target_junction in self.gas_stations:
+                new_dropped_so_far = old_state.dropped_so_far
+                new_fuel = self.gas_tank_capacity
+            else:
+                new_dropped_so_far = old_state.dropped_so_far | {target_junction}
+                new_fuel = old_state.fuel - fuel_cost
+
+            astar_cost = self._get_from_cache(link)
+            if astar_cost == None: #didn't found link in cache
+                map_prob = MapProblem(self.roads, source_id, target_id)
+                astar = self.inner_problem_solver
+                astar_cost = astar.solve_problem(map_prob).final_search_node.cost
+                self._insert_to_cache(link,astar_cost)
+
+            new_state = StrictDeliveriesState(target_junction,new_dropped_so_far,new_fuel)
+            yield (new_state,astar_cost)
 
     def is_goal(self, state: GraphProblemState) -> bool:
         """
@@ -77,4 +106,5 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
         """
         assert isinstance(state, StrictDeliveriesState)
 
-        raise NotImplemented()  # TODO: remove!
+        left_to_drop = self.drop_points.difference(state.dropped_so_far)
+        return len(left_to_drop) == 0 and state.current_location in self.drop_points

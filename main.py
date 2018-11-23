@@ -70,6 +70,7 @@ def run_astar_for_weights_in_range(heuristic_type: HeuristicFunctionType, proble
     for weight in weights:
         ast = AStar(heuristic_type, weight)
         res = ast.solve_problem(problem)
+        print (res)
         costs.append(res.final_search_node.cost)
         expanded_states.append(res.nr_expanded_states)
 
@@ -211,14 +212,14 @@ def strict_deliveries_problem():
     # Ex.26
     # TODO: Call here the function `run_astar_for_weights_in_range()`
     #       with `MSTAirDistHeuristic` and `big_deliveries_prob`.
-    # run_astar_for_weights_in_range(MSTAirDistHeuristic, small_deliveries_strict_problem)
+    run_astar_for_weights_in_range(MSTAirDistHeuristic, small_deliveries_strict_problem)
 
     astar = AStar(MSTAirDistHeuristic,0.5)
-    uc = UniformCost()
-    # print (uc.solve_problem(small_deliveries_strict_problem))
-    res = astar.solve_problem(small_deliveries_strict_problem)
+    #uc = UniformCost()
+    #print (uc.solve_problem(small_deliveries_strict_problem))
+    #res = astar.solve_problem(small_deliveries_strict_problem)
 
-    print (res)
+    #print (res)
     exit()
 
     # Ex.28

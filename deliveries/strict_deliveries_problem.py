@@ -70,16 +70,15 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
         assert isinstance(state_to_expand, StrictDeliveriesState)
         old_state = state_to_expand
 
-        possible_stop_points = (self.drop_points - old_state.dropped_so_far) | self.gas_stations
+        source_junction = old_state.current_location
+        possible_stop_stations = self.possible_stop_points - old_state.dropped_so_far
 
-        for link in old_state.current_location.links:
-            fuel_cost = link.distance
-            target_id = link.target
-            source_id = old_state.current_location.index
-            target_junction = self.roads[target_id]
-
-            # if old_state.fuel < fuel_cost or target_junction not in possible_stop_points:
-            if old_state.fuel < fuel_cost or target_junction in old_state.dropped_so_far:
+        for target_junction in possible_stop_stations:
+            #calculate cost between two junctions
+            fuel_cost = target_junction.calc_air_distance_from(source_junction)
+            new_dropped_so_far = 0
+            new_fuel = 0
+            if old_state.fuel < fuel_cost: #not enough fuel, continue search
                 continue
 
             if target_junction in self.gas_stations:
@@ -90,22 +89,20 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
                 new_fuel = old_state.fuel - fuel_cost
                 if new_fuel == 0:
                     continue
-            else:
-                new_dropped_so_far = old_state.dropped_so_far
-                new_fuel = old_state.fuel - fuel_cost
-                if new_fuel == 0:
-                    continue
 
-
-            astar_cost = self._get_from_cache(link)
-            if astar_cost == None: #didn't found link in cache
-                map_prob = MapProblem(self.roads, source_id, target_id)
+            astar_cost = self._get_from_cache(target_junction.index)
+            if astar_cost is None:  # didn't found junction in cache
+                map_prob = MapProblem(self.roads, source_junction.index, target_junction.index)
                 astar = self.inner_problem_solver
                 astar_cost = astar.solve_problem(map_prob).final_search_node.cost
-                self._insert_to_cache(link,astar_cost)
+                self._insert_to_cache(target_junction.index, astar_cost)
 
-            new_state = StrictDeliveriesState(target_junction,new_dropped_so_far,new_fuel)
-            yield (new_state,astar_cost)
+            # if astar_cost > old_state.fuel:
+            #     continue
+
+            new_state = StrictDeliveriesState(target_junction, new_dropped_so_far, new_fuel)
+            yield (new_state, astar_cost)
+
 
     def is_goal(self, state: GraphProblemState) -> bool:
         """

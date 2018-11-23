@@ -75,9 +75,14 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
 
         for target_junction in possible_stop_stations:
             #calculate cost between two junctions
-            fuel_cost = target_junction.calc_air_distance_from(source_junction)
-            new_dropped_so_far = 0
-            new_fuel = 0
+            fuel_cost = self._get_from_cache((source_junction.index,target_junction.index))
+            if fuel_cost is None:  # didn't found junction in cache
+                map_prob = MapProblem(self.roads, source_junction.index, target_junction.index)
+                astar = self.inner_problem_solver
+                astar_res = astar.solve_problem(map_prob)
+                fuel_cost = astar_res.final_search_node.cost
+                self._insert_to_cache((source_junction.index,target_junction.index), fuel_cost)
+
             if old_state.fuel < fuel_cost: #not enough fuel, continue search
                 continue
 
@@ -87,21 +92,11 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
             elif target_junction in self.drop_points:
                 new_dropped_so_far = old_state.dropped_so_far | {target_junction}
                 new_fuel = old_state.fuel - fuel_cost
-                if new_fuel == 0:
+                if new_fuel == 0: #will be stuck in the target junction, continue search
                     continue
 
-            astar_cost = self._get_from_cache(target_junction.index)
-            if astar_cost is None:  # didn't found junction in cache
-                map_prob = MapProblem(self.roads, source_junction.index, target_junction.index)
-                astar = self.inner_problem_solver
-                astar_cost = astar.solve_problem(map_prob).final_search_node.cost
-                self._insert_to_cache(target_junction.index, astar_cost)
-
-            # if astar_cost > old_state.fuel:
-            #     continue
-
             new_state = StrictDeliveriesState(target_junction, new_dropped_so_far, new_fuel)
-            yield (new_state, astar_cost)
+            yield (new_state, fuel_cost)
 
 
     def is_goal(self, state: GraphProblemState) -> bool:

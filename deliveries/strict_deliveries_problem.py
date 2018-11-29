@@ -76,7 +76,7 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
         for target_junction in possible_stop_stations:
             #calculate cost between two junctions
             fuel_cost = self._get_from_cache((source_junction.index,target_junction.index))
-            if fuel_cost is None:  # didn't found junction in cache
+            if fuel_cost is None:  # didn't find junction in cache
                 map_prob = MapProblem(self.roads, source_junction.index, target_junction.index)
                 astar = self.inner_problem_solver
                 astar_res = astar.solve_problem(map_prob)
@@ -105,9 +105,6 @@ class StrictDeliveriesProblem(RelaxedDeliveriesProblem):
         TODO: implement this method!
         """
         assert isinstance(state, StrictDeliveriesState)
-
-        # if (len(state.dropped_so_far)>=2):
-        #     print ("hello")
 
         left_to_drop = self.drop_points.difference(state.dropped_so_far)
         return len(left_to_drop) == 0 and state.current_location in self.drop_points

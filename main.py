@@ -133,9 +133,9 @@ def relaxed_deliveries_problem():
     # astar = AStar(MaxAirDistHeuristic)
     # res = astar.solve_problem(big_deliveries_prob)
     # print(res)
-
-    # Ex.17
-    #       solve the `big_deliveries_prob` with it and print the results (as before).
+    #
+    # # Ex.17
+    # #       solve the `big_deliveries_prob` with it and print the results (as before).
     # astar = AStar(MSTAirDistHeuristic)
     # res = astar.solve_problem(big_deliveries_prob)
     # print(res)
@@ -143,7 +143,7 @@ def relaxed_deliveries_problem():
     #
     # # Ex.18
     # #       with `MSTAirDistHeuristic` and `big_deliveries_prob`.
-    # run_astar_for_weights_in_range(MSTAirDistHeuristic, big_deliveries_prob)
+   # run_astar_for_weights_in_range(MSTAirDistHeuristic, big_deliveries_prob)
 
     # Ex.24
     # TODO:
@@ -225,9 +225,9 @@ def strict_deliveries_problem():
 
 
 def main():
-    map_problem()
+    #map_problem()
     relaxed_deliveries_problem()
-    strict_deliveries_problem()
+    #strict_deliveries_problem()
 
 
 if __name__ == '__main__':

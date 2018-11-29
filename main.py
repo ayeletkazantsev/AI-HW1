@@ -82,26 +82,26 @@ def map_problem():
     print('Solve the map problem.')
 
     # Ex.8
-    # map_prob = MapProblem(roads, 54, 549)
-    # uc = UniformCost()
-    # res = uc.solve_problem(map_prob)
-    # print(res)
+    map_prob = MapProblem(roads, 54, 549)
+    uc = UniformCost()
+    res = uc.solve_problem(map_prob)
+    print(res)
     #
     # #       solve the same `map_prob` with it and print the results (as before).
     # # Notice: AStar constructor receives the heuristic *type* (ex: `MyHeuristicClass`),
     # #         and not an instance of the heuristic (eg: not `MyHeuristicClass()`).
     # #exit()
     # # Ex.10
-    # map_prob = MapProblem(roads, 54, 549)
-    # astar = AStar(NullHeuristic)
-    # res = astar.solve_problem(map_prob)
-    # print(res)
+    map_prob = MapProblem(roads, 54, 549)
+    astar = AStar(NullHeuristic)
+    res = astar.solve_problem(map_prob)
+    print(res)
     #
     # # Ex.11
-    # map_prob = MapProblem(roads, 54, 549)
-    # astar = AStar(AirDistHeuristic)
-    # res = astar.solve_problem(map_prob)
-    # print(res)
+    map_prob = MapProblem(roads, 54, 549)
+    astar = AStar(AirDistHeuristic)
+    res = astar.solve_problem(map_prob)
+    print(res)
 
     # Ex.12
     # TODO:
@@ -112,7 +112,7 @@ def map_problem():
     #    (upper in this file).
     # 3. Call here the function `run_astar_for_weights_in_range()`
     #    with `AirDistHeuristic` and `map_prob`.
-    #run_astar_for_weights_in_range(AirDistHeuristic,map_prob)
+    run_astar_for_weights_in_range(AirDistHeuristic,map_prob)
 
 
 # --------------------------------------------------------------------
@@ -211,26 +211,23 @@ def strict_deliveries_problem():
 
     # Ex.26
     # TODO: Call here the function `run_astar_for_weights_in_range()`
-    #       with `MSTAirDistHeuristic` and `big_deliveries_prob`.
+    #       with `MSTAirDistHeuristic` and `small_deliveries_prob`.
     run_astar_for_weights_in_range(MSTAirDistHeuristic, small_deliveries_strict_problem)
 
-    # astar = AStar(MSTAirDistHeuristic,0.5)
-    #uc = UniformCost()
-    #print (uc.solve_problem(small_deliveries_strict_problem))
-    #res = astar.solve_problem(small_deliveries_strict_problem)
-
-    #print (res)
+    #exit()
 
     # Ex.28
     # TODO: create an instance of `AStar` with the `RelaxedDeliveriesHeuristic`,
     #       solve the `small_deliveries_strict_problem` with it and print the results (as before).
-    # astar = AStar(RelaxedDeliveriesHeuristic)
-    # print(astar.solve_problem(small_deliveries_strict_problem))
+    astar = AStar(RelaxedDeliveriesHeuristic)
+    res = astar.solve_problem(small_deliveries_strict_problem)
+    print (res)
+
 
 def main():
-    # map_problem()
+    map_problem()
     relaxed_deliveries_problem()
-    # strict_deliveries_problem()
+    strict_deliveries_problem()
 
 
 if __name__ == '__main__':
